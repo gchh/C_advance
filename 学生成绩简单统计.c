@@ -48,7 +48,7 @@ int main()
 	Student *pStudent;
 	pStudent=&student[0];
 	int i;
-	printf("输入学生姓名和三科成绩：\n");
+	printf("输入%d名学生的姓名和三科成绩：\n",student_number);
 	for(i=0;i<student_number;i++)
 	{
 		pStudent=student_input(&student[i]);
