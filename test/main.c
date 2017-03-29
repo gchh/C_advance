@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include "acllib.h"
 
+ACL_Image img;
+
+ACL_Sound sound;
+
 int Setup()
 {
 	initConsole();
@@ -24,7 +28,8 @@ int Setup()
 	setTextColor(BLUE);
 	setTextBkColor(BLACK);
 	setTextSize(50);
-	paintText(20,0,"HELLO");
+	setTextFont("STCaiyun"); 
+	paintText(100,0,"ºÃ");
 	//Ãæ
 	setBrushColor(RED);
 	setBrushStyle(BRUSH_STYLE_DIAGCROSS);
@@ -62,6 +67,15 @@ int Setup()
 	//Ô²½Ç¾ØÐÎ
 	setPenColor(EMPTY); 
 	roundrect(600,100,800,300,100,100); 
+	//Í¼Æ¬
+	loadImage("lena.jpg",&img); 
+	//putImage(&img,0,400);
+	putImageScale(&img,0,400,100,100);
+	//putImageTransparent(&img,0,400,100,100,RED);
+	//ÉùÒô
+	loadSound("Ë®µÎ",&sound);
+	playSound(sound,1);
+	//stopSound(sound);
 	endPaint();
 	return 0;
 }
