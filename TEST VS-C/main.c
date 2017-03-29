@@ -12,7 +12,7 @@ int Setup()
 	scanf_s("%d",&height); 
 	//生成一个窗口 
 	//initWindow("test",DEFAULT,DEFAULT,width,height);
-	initWindow("test", -100, -100, width, height);
+	initWindow("test", 0, 0, width, height);
 	beginPaint();
 	//moveRel(100, 100);
 	//moveTo(100, 100);

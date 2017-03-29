@@ -73,8 +73,9 @@ int Setup()
 	putImageScale(&img,0,400,100,100);
 	//putImageTransparent(&img,0,400,100,100,RED);
 	//ÉùÒô
-	loadSound("Ë®µÎ",&sound);
-	playSound(sound,1);
+	//ÉùÒô
+	loadSound("D:/Users/atdo/Desktop/C_advance/test/drip_drop.wav",&sound);
+	playSound(sound,1);	
 	//stopSound(sound);
 	endPaint();
 	return 0;
