@@ -2,4 +2,4 @@
 *.exe
 #╨Жбтнд╪Ч╪п
 /vedio/*
-/TEST VS-C/Debug/*
+Debug/
