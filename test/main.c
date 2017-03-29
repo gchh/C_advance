@@ -29,6 +29,39 @@ int Setup()
 	setBrushColor(RED);
 	setBrushStyle(BRUSH_STYLE_DIAGCROSS);
 	chrod((width-DEFAULT)/2,(height-DEFAULT)/2,width,height,width,0,0,height);
+	//»¡
+	arc(20,50,100,200,20,50,100,200);	
+	//chrod(20,50,100,200,20,50,100,200);	
+	lineTo(400,0);
+	lineRel(0,400);
+	//±´Èû¶ûÇúÏß 
+	POINT p[]=
+	{
+		{0,0},
+		{150,0},
+		{0,150},
+		{150,150},
+		{150,300},
+		{150,150},
+		{300,300},
+	};
+	polyBezier(p,7);
+	//ÍÖÔ²
+	ellipse(300,0,500,100); 
+	//ÉÈÐÎ 
+	pie(0,300,200,400,0,350,200,350);
+	//¶à±ßÐÎ 
+	POINT lp[]=
+	{
+		{0,200},
+		{200,200},
+		{0,400},
+		{200,400},
+	};
+	polygon(lp,4);
+	//Ô²½Ç¾ØÐÎ
+	setPenColor(EMPTY); 
+	roundrect(600,100,800,300,100,100); 
 	endPaint();
 	return 0;
 }
