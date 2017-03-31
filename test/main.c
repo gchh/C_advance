@@ -114,14 +114,116 @@ int Setup()
 
 #include <stdio.h>
 #include "acllib.h"
+#include <math.h>
+#include <time.h>
 
 ACL_Sound sound;
 
-#define MLEN 64
+#define RAD(x) ((x)/360.0*2*3.1415926535)//角度转换成弧度
+int h = 0;
+int m = 0;
+int s = 0;
+typedef struct
+{
+	int tm_hour;
+	int tm_min;
+	int tm_sec;
+}tm;
+void timerEvent(int tid)
+{
+#if 0
+	++s;
+	if(s==60)
+	{
+		s = 0;
+		++m;
+	}
+	if(m==60)
+	{
+		m = 0;
+		++h;
+	}
+	if(h==12)
+		h = 0;
+#endif
+    // 获取本地时间
+    time_t timer = time(NULL);
+    struct tm *timel = localtime(&timer);
+	h=timel->tm_hour%12;
+	m=timel->tm_min;
+	s=timel->tm_sec;
+			
+	static const int ox = 150;
+	static const int oy = 150;
+
+	static const int hl = 46;
+	static const int ml = 74;
+	static const int sl = 120;
+
+	int i;
+
+	beginPaint();
+
+	//clearDevice();
+
+	// circle
+	setPenWidth(3);
+	setPenColor(MAGENTA);//(BLACK);
+	setBrushColor(YELLOW);//(WHITE);
+	ellipse(25,25,275,275);
+
+	// label
+	//setPenWidth(1);
+	//setPenColor(BLUE);
+	//for(i=0;i<12;++i)
+	//{
+	//	moveTo(ox+115*sin(RAD(180-i*30)),oy+115*cos(RAD(180-i*30)));
+	//	lineTo(ox+125*sin(RAD(180-i*30)),oy+125*cos(RAD(180-i*30)));
+	//}
+	for(i=0;i<60;++i)
+	{
+		if(i%15==0)setPenWidth(3);
+		else setPenWidth(1);
+		if(i%5==0)
+		{
+			setPenColor(BROWN);
+			moveTo(ox+105*sin(RAD(180-i*6)),oy+105*cos(RAD(180-i*6)));
+		}
+		else 
+		{
+			setPenColor(BLUE);
+			moveTo(ox+115*sin(RAD(180-i*6)),oy+115*cos(RAD(180-i*6)));
+		}
+		lineTo(ox+125*sin(RAD(180-i*6)),oy+125*cos(RAD(180-i*6)));
+	}
+
+	// hour
+	setPenWidth(8);
+	setPenColor(BLACK);
+	moveTo(ox,oy);
+	lineTo(ox+hl*sin(RAD(180-h*30)),oy+hl*cos(RAD(180-h*30)));
+
+	// minute
+	setPenWidth(4);
+	setPenColor(GREEN);
+	moveTo(ox,oy);
+	lineTo(ox+ml*sin(RAD(180-m*6)),oy+ml*cos(RAD(180-m*6)));
+
+	// second
+	setPenWidth(2);
+	setPenColor(RED);
+	moveTo(ox,oy);
+	lineTo(ox+sl*sin(RAD(180-s*6)),oy+sl*cos(RAD(180-s*6)));
+
+	endPaint();
+}
+
+#define MLEN 9//64 汉字2个字节，英文字母1个字节 
 int len = 0,i=0;
 char str[MLEN];
 void charEvent(char c)
 {
+	printf("%d\n",len); 
     if(len+1>=MLEN)
     {
         memset(str,0,sizeof(str));
@@ -133,6 +235,9 @@ void charEvent(char c)
     beginPaint();
     setTextSize(16);
     paintText(0,50,str);
+    setCaretSize(3,20);
+    setCaretPos(len*11,50);//setTextSize(16) 16/2=8
+    showCaret();    
     endPaint();
 }
 
@@ -159,6 +264,7 @@ void keyEvent(int key,int event)
     }	
     beginPaint();
     //clearDevice();
+    setPenColor(EMPTY); 
     setBrushColor(BLACK);
     rectangle(kx-10,ky-10,kx+10,ky+10);
     endPaint();	
@@ -173,6 +279,7 @@ void mouseEvent(int mx,int my,int bt,int event)
   		bt_old=bt;
   		event_old=event;
  	}
+#if 0
  	if(event==BUTTON_DOWN)
  	{
   		beginPaint();
@@ -192,31 +299,49 @@ void mouseEvent(int mx,int my,int bt,int event)
   		endPaint();
  	}
     else if(event==MOUSEMOVE&&(bt_old==LEFT_BUTTON||bt_old==RIGHT_BUTTON)&&event_old==BUTTON_DOWN)
+#endif
+	if(event==MOUSEMOVE&&(bt_old==LEFT_BUTTON||bt_old==RIGHT_BUTTON)&&event_old==BUTTON_DOWN||event==BUTTON_DOWN)
  	{
   		beginPaint();
+  		setBrushStyle(BRUSH_STYLE_SOLID);
+  		setPenColor(EMPTY);   	
+     	if(bt_old==LEFT_BUTTON)
+		{
+			//setPenColor(RED); 
+			setBrushColor(RED);
+		}
+     	else if(bt_old==RIGHT_BUTTON)
+		{
+			//setPenColor(BLUE);
+			setBrushColor(BLUE);
+		}		  	
      	rectangle(mx-10,my-10,mx+10,my+10);
   		endPaint(); 
  	}   
 }
 int Setup()
 {
-	/*
 	initConsole();
 	printf("输入宽度：\n");
 	int width;
 	scanf("%d",&width);
 	printf("输入高度：\n"); 
 	int height;
-	scanf("%d",&height); */
-	int width=700;
-	int height=700;
+	scanf("%d",&height); 
+	//int width=700;
+	//int height=700;
 	initWindow("test",DEFAULT,DEFAULT,width,height);
 	registerMouseEvent(mouseEvent);
 	kx=getX()+20;
 	ky=getY()+20;
 	registerKeyboardEvent(keyEvent);
 	registerCharEvent(charEvent);
+	registerTimerEvent(timerEvent);
+	startTimer(0,1000);	
 	beginPaint();
+    setCaretSize(3,20);
+    setCaretPos(0,50);
+    showCaret(); 
 	rectangle(kx-10,ky-10,kx+10,ky+10);
 	loadSound("D:/Users/atdo/Desktop/C_advance/test/白噪音.mp3",&sound);
 	playSound(sound,1);	
